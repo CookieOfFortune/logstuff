@@ -1,10 +1,8 @@
 const path = require('path');
-const slsw = require('serverless-webpack');
 
-module.exports = {
-    mode: "development",
-
-    entry: slsw.lib.entries,
+module.exports = {    
+    mode: 'development',
+    entry: './src/logstuff.tsx',
 
     module: {
         rules: [
@@ -17,9 +15,8 @@ module.exports = {
       },
 
     output: {
-        libraryTarget: 'commonjs',
         path: path.join(__dirname, '.webpack'),
-        filename: '[name].js'
+        filename: 'bundle.js'
     },
 
     resolve: {
@@ -31,9 +28,4 @@ module.exports = {
         ],
     },
 
-    target: 'node',
-
-    externals: [
-        /aws-sdk/,        
-    ],
 };

@@ -1,17 +1,6 @@
 import { Handler, Context, Callback } from 'aws-lambda';
 import { DynamoDB } from 'aws-sdk';
 
-/*
-interface CpuLoads {
-  id: string;
-  timestamp: string;
-  cpu_loads: {
-    medians: number[];
-    stds: number[];
-  }
-}
-*/
-
 const db = new DynamoDB.DocumentClient();
 
 const getCurrentCpuLoads: Handler = (_event: any, _context: Context, callback: Callback) => {
@@ -36,7 +25,14 @@ const getCurrentCpuLoads: Handler = (_event: any, _context: Context, callback: C
     }
     else
     {    
-      callback(null, data.Items[0]);
+      callback(null, {
+        statusCode: 200,
+        headers: {
+          "Content-Type": "text/plain",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify(data.Items[0]),
+      });
     }
   });
 
