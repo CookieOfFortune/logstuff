@@ -9,6 +9,7 @@
   "author": "Pengyuan Chen",
   "license": "MIT",
   "devDependencies": {
+    "@types/lodash": "^4.14.108",
     "@types/react": "^16.3.12",
     "@types/react-dom": "^16.0.5",
     "ts-loader": "^4.2.0",
@@ -17,6 +18,7 @@
     "webpack-cli": "^2.0.15"
   },
   "dependencies": {
+    "lodash": "^4.17.10",
     "react": "^16.3.2",
     "react-dom": "^16.3.2"
   }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import _ from 'lodash';
 import { CpuLoads } from '@common/CpuLoads';
 
 export interface CpuLoadsViewProps extends React.Props<CpuLoadsView> {
@@ -40,6 +41,13 @@ export class CpuLoadsView extends React.Component<CpuLoadsViewProps, CpuLoadsVie
     }
 
     render() {
-        return <h1>{this.state.cpuLoads.timestamp}</h1>;
+        const state = this.state;
+        const medians = state.cpuLoads.cpu_loads.medians;
+        const stds = state.cpuLoads.cpu_loads.stds;
+        const loads = _.zip(medians, stds).map(([median, std], i) => <div>CPU {i + 1}: {median} ({std})</div>);
+        return <div>
+            <h1>{this.state.cpuLoads.timestamp}</h1>
+            {loads}
+        </div>;
     }
 }
