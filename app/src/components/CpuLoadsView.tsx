@@ -22,7 +22,7 @@ export class CpuLoadsView extends React.Component<CpuLoadsViewProps, CpuLoadsVie
         };
     }
 
-    getCpuLoads = () => {
+    getCurrentCpuLoads = () => {
         window.fetch('https://api.cookieoffortune.com/status', { mode: 'cors' })
         .then(response => {         
             response.json()
@@ -35,22 +35,36 @@ export class CpuLoadsView extends React.Component<CpuLoadsViewProps, CpuLoadsVie
                 ]);
                 if(ncores != null)
                 {
-                    const cpuLoads = this.state.cpuLoads.slice();
-                    cpuLoads.push(data as CpuLoad);
-                    while(cpuLoads.length > 60)
-                    {
-                        cpuLoads.shift();
-                    }
-                    this.setState({ncores: ncores, cpuLoads: cpuLoads});
+                    this.setState({ncores: ncores, cpuLoads: [cpuLoad]});
                 }
             })
             .catch(err => console.log(err));
         });
     }
 
+    getCpuLoadsSince = () => {
+        const last = _(this.state.cpuLoads).last();
+        if(last == null)
+        {
+            return;
+        }
+        const timestamp = last.timestamp;
+        const params = new URLSearchParams();
+        params.set('timestamp', timestamp);
+        window.fetch('https://api.cookieoffortune.com/status/since?' + params.toString(), { mode: 'cors' })
+        .then(response => {
+            response.json()
+            .then(data => {
+                const cpuLoads = this.state.cpuLoads.concat(data as CpuLoad[]);
+                this.setState({cpuLoads: _.takeRight(cpuLoads, 60)});
+            });
+        })
+        .catch(err => console.log(err));
+    }
+
     componentDidMount() {
-        this.getCpuLoads();
-        this.timer = window.setInterval(this.getCpuLoads, 10000);
+        this.getCurrentCpuLoads();
+        this.timer = window.setInterval(this.getCpuLoadsSince, 10000);
     }
 
     componentWillUnmount() {
