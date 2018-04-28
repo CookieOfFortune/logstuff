@@ -31,12 +31,20 @@ provider:
 # you can add packaging information here
 
 functions:
-  logstuff:
+  currentCpuLoads:
     handler: src/handler.getCurrentCpuLoads
 
     events:
       - http:
           path: status
+          method: get
+
+  cpuLoadsSince:
+    handler: src/handler.getCpuLoadsSince
+
+    events:
+      - http:
+          path: status/since
           method: get
 
 #    The following are a few example events you can configure

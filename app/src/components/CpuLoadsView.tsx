@@ -37,7 +37,7 @@ export class CpuLoadsView extends React.Component<CpuLoadsViewProps, CpuLoadsVie
                 {
                     const cpuLoads = this.state.cpuLoads.slice();
                     cpuLoads.push(data as CpuLoad);
-                    if(cpuLoads.length > 60)
+                    while(cpuLoads.length > 60)
                     {
                         cpuLoads.shift();
                     }
