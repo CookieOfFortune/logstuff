@@ -1,28 +1,31 @@
 import * as React from "react";
-import Highcharts from "highcharts";
+import { Point } from "@common/Interfaces";
 
 export interface ChartProps extends React.Props<Chart> {
-    options: Highcharts.Options;
+    points: Point[];
 }
 
 export interface ChartState {
 }
 
 export class Chart extends React.Component<ChartProps, ChartState> {
-    chart: Highcharts.ChartObject | null;
-    container: HTMLDivElement | null;
+    context: CanvasRenderingContext2D | null;
+    container: HTMLCanvasElement | null;
 
     constructor(props: ChartProps) {
         super(props);
-        this.chart = null;
         this.container = null;
     }
 
     updateChart()
     {
-        if(this.chart != null)
+        if(this.context != null)
         {
-            this.chart.update(this.props.options);
+            this.props.foreach(point => {
+                const x = point[0];
+                const y = point[1];
+                this.context.arc(axes.X(x), axes.Y(y), 1, 0, 2 * Math.PI);
+            });
         }
     }
 
@@ -39,18 +42,14 @@ export class Chart extends React.Component<ChartProps, ChartState> {
     componentDidMount() {
         if(this.container != null)
         {
-            this.chart = new Highcharts.Chart(this.container, this.props.options);
+            this.context = this.container.getContext('2d');
         }
     }
 
     componentWillUnmount() {
-        if(this.chart != null)
-        {
-            this.chart.destroy();
-        }
     }
 
     render() {
-        return <div ref={container => this.container = container}></div>;
+        return <canvas ref={container => this.container = container}></canvas>;
     }
 }
